@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#071b2c">
+<title>DIP FROG — Jungle Quest</title>
+<style>
+:root{--bg:#061522;--panel:#0b263a;--panel2:#10344b;--green:#a5f52b;--gold:#ffd34e;--cyan:#40dcff;--muted:#a7c4d4;--line:#24536a}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:radial-gradient(ellipse at top,#103d58 0,#061522 60%);font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#f4fbff}body{padding:0 0 env(safe-area-inset-bottom)}button{font:inherit;cursor:pointer}button:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+.app{max-width:900px;min-height:100dvh;margin:auto;display:flex;flex-direction:column;background:linear-gradient(180deg,#092238,#061522 65%);overflow:hidden}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 15px;border-bottom:1px solid #24536a;background:#061522e8;position:sticky;top:0;z-index:4}
+.brand{font-size:19px;font-weight:1000;letter-spacing:.7px;white-space:nowrap}.brand span{color:var(--green)}.tagline{font-size:10px;color:#a8c6d6;letter-spacing:1.8px;font-weight:800}
+.wallet{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.pill{background:#102f43;border:1px solid #2b6078;border-radius:13px;padding:7px 9px;font-size:12px;font-weight:900;white-space:nowrap}
+main{padding:13px;display:flex;flex-direction:column;gap:13px;flex:1}
+.hero{position:relative;border:1px solid #2c718b;border-radius:23px;padding:17px;background:linear-gradient(135deg,#104b66,#09283c 65%,#142f3d);overflow:hidden;box-shadow:0 12px 35px #0004}
+.hero:after{content:"";position:absolute;width:190px;height:190px;border-radius:50%;right:-65px;top:-90px;background:#a5f52b12;border:1px solid #a5f52b22}
+.hero-top{display:flex;align-items:center;justify-content:space-between;gap:10px;position:relative;z-index:1}.eyebrow{font-size:10px;font-weight:1000;letter-spacing:2px;color:var(--cyan)}.hero h1{font-size:clamp(25px,6vw,37px);line-height:1.05;margin:6px 0;color:var(--gold);text-shadow:0 3px #734800}.hero p{font-size:13px;color:#c6e7f4;margin:8px 0 0;max-width:420px;line-height:1.5}.frogbadge{font-size:57px;filter:drop-shadow(0 6px 0 #05202b);flex-shrink:0}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:15px;position:relative;z-index:1}.stat{background:#061b2bb8;border:1px solid #28546a;border-radius:14px;padding:10px}.stat small{display:block;color:#9fc1d2;font-size:10px;font-weight:800;letter-spacing:.7px}.stat b{display:block;margin-top:3px;font-size:19px}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;background:#061522;padding:6px;border:1px solid #1e465c;border-radius:16px}.tab{border:0;background:transparent;color:#a7c4d4;border-radius:11px;padding:10px 3px;font-size:11px;font-weight:900}.tab.active{background:linear-gradient(135deg,#b6ff48,#72d40b);color:#173000;box-shadow:0 3px 0 #3c7e05}
+.panel{display:none;background:linear-gradient(160deg,#0b2b40,#081e2e);border:1px solid #214c63;border-radius:20px;padding:14px;min-width:0}.panel.active{display:block}.panel h2{margin:0 0 5px;font-size:18px}.muted{color:var(--muted);font-size:12px;line-height:1.5}.game-wrap{position:relative;border-radius:17px;overflow:hidden;border:1px solid #2d7088;background:#0788c5;height:min(72dvh,760px);min-height:420px}.game-wrap canvas{width:100%;height:100%;display:block;touch-action:none}
+.game-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:17px;background:#031321a8;z-index:2}.modal{width:min(360px,100%);text-align:center;background:linear-gradient(160deg,#10405a,#061a2a);border:1px solid #47b8d5;border-radius:22px;padding:20px 16px;box-shadow:0 15px 50px #00101dcc}.modal .emoji{font-size:54px}.modal h2{font-size:25px;color:var(--gold);margin:5px 0}.modal p{font-size:13px;color:#d5f3ff;line-height:1.5}
+.btn{border:0;border-radius:14px;padding:12px 16px;font-weight:1000;color:#173000;background:linear-gradient(#d0ff61,#7bdd0d);box-shadow:0 4px 0 #3b7f00}.btn:active{transform:translateY(2px);box-shadow:0 2px 0 #3b7f00}.btn.secondary{background:#12394f;color:#f4fbff;border:1px solid #34718b;box-shadow:none}.btn.small{padding:9px 12px;font-size:12px}.btn:disabled{opacity:.45;cursor:not-allowed}
+.game-controls{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px}.pad{display:flex;gap:8px}.ctrl{width:52px;height:48px;border-radius:14px;border:1px solid #4cc9ef;background:#103c56;color:white;font-size:22px;font-weight:900;touch-action:none}.ctrl.jump{width:88px;background:linear-gradient(#ffdf63,#ff9e21);border-color:#fff0a2;color:#392100;font-size:14px}.hint{font-size:10px;text-align:center;color:#a7c4d4}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid #1c4053}.row:last-child{border-bottom:0}.row-title{font-size:13px;font-weight:900}.row-desc{font-size:11px;color:#a7c4d4;margin-top:3px;line-height:1.4}.reward{font-size:12px;font-weight:1000;color:var(--gold);white-space:nowrap}.codebox{display:flex;gap:7px;margin:12px 0}.codebox input{min-width:0;flex:1;background:#061522;border:1px solid #2a5c73;border-radius:12px;color:#fff;padding:11px;font-weight:800}.notice{padding:10px 12px;border-radius:12px;background:#092437;border:1px solid #1f5268;color:#a9d9ec;font-size:11px;line-height:1.5;margin-top:10px}
+.leader-num{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:9px;background:#143a50;color:var(--gold);font-weight:1000;margin-right:8px}.you{color:var(--green)}.footer{text-align:center;color:#7196aa;font-size:10px;padding:8px 14px 18px}
+.toast{position:fixed;bottom:calc(95px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:#d0ff61;color:#173000;padding:11px 16px;border-radius:12px;font-size:12px;font-weight:900;z-index:20;box-shadow:0 5px 25px #0006;display:none;max-width:90%;text-align:center}
+@media(min-width:700px){main{padding:20px}.game-wrap{height:min(76dvh,760px);min-height:520px}.tabs{gap:8px}.tab{font-size:13px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+ <div><div class="brand">🐸 DIP <span>FROG</span></div><div class="tagline">JUNGLE QUEST</div></div>
+ <div class="wallet"><div class="pill">🪙 <b id="headerCoins">0</b></div><div class="pill">⭐ <b id="headerScore">0</b></div><button class="btn small secondary" id="soundToggle" aria-label="Toggle sound">🔊 Sound</button></div>
+</header>
+<main>
+<section class="hero">
+ <div class="hero-top"><div><div class="eyebrow">WELCOME TO THE SWAMP</div><h1>JUMP. COLLECT.<br>RULE THE JUNGLE.</h1><p>Help the crowned frog leap through the jungle, grab golden coins, finish missions and climb the DIP FROG leaderboard.</p></div><div class="frogbadge">🐸👑</div></div>
+ <div class="stats-grid"><div class="stat"><small>YOUR COINS</small><b>🪙 <span id="heroCoins">0</span></b></div><div class="stat"><small>BEST SCORE</small><b>🏆 <span id="bestScore">0</span></b></div><div class="stat"><small>STREAK</small><b>🔥 <span id="streak">0</span>d</b></div></div>
+</section>
+<nav class="tabs" aria-label="Game menu">
+ <button class="tab active" data-tab="gamePanel">🎮 Play</button><button class="tab" data-tab="dailyPanel">🎁 Daily</button><button class="tab" data-tab="missionsPanel">🎯 Missions</button><button class="tab" data-tab="socialPanel">🏆 Social</button>
+</nav>
+<section class="panel active" id="gamePanel">
+ <h2>Jungle Adventure</h2><div class="muted">Land on green platforms, collect coins and avoid the bugs. Best score is saved on this device.</div>
+ <div class="game-wrap" style="margin-top:12px"><canvas id="game" aria-label="DIP Frog platform game"></canvas>
+  <div class="game-overlay" id="gameOverlay"><div class="modal"><div class="emoji" id="modalEmoji">🐸👑</div><h2 id="modalTitle">DIP FROG</h2><p id="modalText">Ready for a jungle adventure? Collect coins and chase your best score.</p><button class="btn" id="startBtn">▶ START GAME</button><br><button class="btn secondary small" id="howBtn" style="margin-top:10px">HOW TO PLAY</button></div></div>
+ </div>
+ <div class="game-controls"><div class="pad"><button class="ctrl" id="left" aria-label="Move left">◀</button><button class="ctrl" id="right" aria-label="Move right">▶</button></div><div class="hint">MOVE • JUMP • COLLECT</div><button class="ctrl jump" id="jump" aria-label="Jump">⬆ JUMP</button></div>
+ <div class="notice">🎮 Game points and scores are demo data stored on this device. They are not blockchain tokens.</div>
+</section>
+<section class="panel" id="dailyPanel">
+ <h2>Daily Swamp Bonus 🎁</h2><div class="muted">Come back every day to keep your streak alive.</div>
+ <div class="row"><div><div class="row-title">Daily login reward</div><div class="row-desc" id="dailyDescription">Claim your reward for today.</div></div><div style="text-align:right"><div class="reward">+100 🪙</div><button class="btn small" id="claimDaily">CLAIM</button></div></div>
+ <div class="row"><div><div class="row-title">7-day streak bonus</div><div class="row-desc">Build a 7-day streak for a bonus.</div></div><div class="reward">+500 🪙</div></div>
+ <div class="notice">Daily rewards are local demo points. Changing or clearing browser storage can reset them.</div>
+</section>
+<section class="panel" id="missionsPanel">
+ <h2>Swamp Missions 🎯</h2><div class="muted">Complete actions to collect demo rewards. Social actions are not automatically verified.</div>
+ <div id="missionList"></div>
+ <div class="notice">Do not submit passwords or wallet seed phrases. Mission rewards here are only in-game demo points.</div>
+</section>
+<section class="panel" id="socialPanel">
+ <h2>Community & Leaderboard 🏆</h2><div class="muted">Your score and this device's saved demo entries appear below.</div>
+ <div class="row"><div><div class="row-title">Your player name</div><div class="row-desc">Shown on the local leaderboard</div></div><button class="btn small secondary" id="editName">EDIT</button></div>
+ <div id="leaderboard"></div>
+ <h2 style="margin-top:20px">Invite a Friend 👥</h2><div class="muted">Share your invite code. This standalone file cannot verify real referrals.</div>
+ <div class="codebox"><input id="refCode" readonly aria-label="Your referral code"><button class="btn small" id="copyRef">COPY</button></div>
+ <button class="btn" id="shareRef">↗ SHARE INVITE</button>
+ <div class="notice">For a real shared leaderboard, verified referrals, anti-cheat protection and cross-device accounts, connect a backend and validate Telegram users on the server.</div>
+</section>
+</main>
+<div class="footer">DIP FROG • JUNGLE QUEST • Community demo build</div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+(()=> {
+'use strict';
+const $=id=>document.getElementById(id);
+const storeKey='dipFrogPremiumV1';
+const defaults={coins:0,score:0,best:0,streak:0,lastDaily:'',name:'DIP Frogger',refCode:'',missions:{},sound:true,leaderboard:[]};
+let data;
+try{data={...defaults,...JSON.parse(localStorage.getItem(storeKey)||'{}')};}catch(e){data={...defaults};}
+data.missions=data.missions||{};data.leaderboard=Array.isArray(data.leaderboard)?data.leaderboard:[];
+if(!data.refCode)data.refCode='DIP'+Math.random().toString(36).slice(2,8).toUpperCase();
+let audioCtx=null;
+function save(){try{localStorage.setItem(storeKey,JSON.stringify(data));}catch(e){}}
+function toast(msg){const el=$('toast');el.textContent=msg;el.style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.style.display='none',2300);}
+function sound(type='coin'){if(!data.sound)return;try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);const map={coin:[880,.09],jump:[440,.08],hurt:[140,.18],claim:[660,.13],click:[520,.05]};const v=map[type]||map.click;o.type='sine';o.frequency.setValueAtTime(v[0],audioCtx.currentTime);if(type==='coin')o.frequency.exponentialRampToValueAtTime(1320,audioCtx.currentTime+.08);g.gain.setValueAtTime(.0001,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.12,audioCtx.currentTime+.012);g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+v[1]);o.start();o.stop(audioCtx.currentTime+v[1]+.02);}catch(e){}}
+function updateUI(){['headerCoins','heroCoins'].forEach(id=>$(id).textContent=data.coins);$('headerScore').textContent=data.score;$('bestScore').textContent=data.best;$('streak').textContent=data.streak;$('soundToggle').textContent=data.sound?'🔊 Sound':'🔇 Muted';$('refCode').value=data.refCode;renderMissions();renderLeaderboard();dailyUI();}
+function setCoins(n){data.coins=Math.max(0,Math.floor(n));save();updateUI();}
+const missions=[
+{id:'play',title:'Play a Jungle Run',desc:'Start a game and finish one run.',reward:50},
+{id:'coins',title:'Collect 10 Coins',desc:'Collect 10 coins during gameplay.',reward:100},
+{id:'daily',title:'Claim Daily Bonus',desc:'Claim today’s login reward.',reward:50},
+{id:'invite',title:'Invite a Friend',desc:'Share your personal invite code.',reward:75},
+{id:'community',title:'Community Explorer',desc:'Open the DIP FROG community link.',reward:40}
+];
+function completeMission(id){if(data.missions[id])return;const m=missions.find(x=>x.id===id);if(!m)return;data.missions[id]=true;data.coins+=m.reward;save();updateUI();sound('claim');toast('Mission complete! +'+m.reward+' demo coins');}
+function renderMissions(){const el=$('missionList');if(!el)return;el.innerHTML='';missions.forEach(m=>{const done=!!data.missions[m.id];const row=document.createElement('div');row.className='row';const left=document.createElement('div');const title=document.createElement('div');title.className='row-title';title.textContent=(done?'✅ ':'')+m.title;const desc=document.createElement('div');desc.className='row-desc';desc.textContent=m.desc;left.append(title,desc);const right=document.createElement('div');right.style.textAlign='right';const reward=document.createElement('div');reward.className='reward';reward.textContent='+'+m.reward+' 🪙';const btn=document.createElement('button');btn.className='btn small'+(done?' secondary':'');btn.disabled=done;btn.textContent=done?'DONE':(m.id==='community'?'OPEN':'CLAIM');btn.addEventListener('click',()=>{if(done)return;if(m.id==='community'){window.open('https://t.me/','_blank','noopener');completeMission(m.id);}else if(m.id==='invite'){shareInvite();completeMission(m.id);}else if(m.id==='play'){if(!hasPlayed){toast('Start and finish a run first!');return;}completeMission(m.id);}else if(m.id==='coins'){if(runCoins<10){toast('Collect 10 coins in one run first!');return;}completeMission(m.id);}else if(m.id==='daily'){if(data.lastDaily!==today()){toast('Claim your daily bonus first!');return;}completeMission(m.id);}});right.append(reward,btn);row.append(left,right);el.append(row);});}
+function today(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function yesterday(){const d=new Date();d.setDate(d.getDate()-1);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function dailyUI(){const claimed=data.lastDaily===today();$('claimDaily').disabled=claimed;$('claimDaily').textContent=claimed?'CLAIMED':'CLAIM';$('dailyDescription').textContent=claimed?'Already claimed today. Come back tomorrow!':'Today’s bonus is ready to collect.';}
+$('claimDaily').addEventListener('click',()=>{if(data.lastDaily===today()){toast('Daily reward already claimed.');return;}data.streak=data.lastDaily===yesterday()?data.streak+1:1;const bonus=100+(data.streak%7===0?500:0);data.lastDaily=today();data.coins+=bonus;data.missions.daily=data.missions.daily||false;save();updateUI();sound('claim');toast('Daily reward: +'+bonus+' demo coins!');});
+function syncLeaderboard(){const entry={name:data.name||'DIP Frogger',score:data.best||data.score||0};data.leaderboard=data.leaderboard.filter(x=>x&&x.name!==entry.name);data.leaderboard.push(entry);data.leaderboard.sort((a,b)=>(b.score||0)-(a.score||0));data.leaderboard=data.leaderboard.slice(0,10);save();}
+function renderLeaderboard(){const el=$('leaderboard');if(!el)return;syncLeaderboard();el.innerHTML='';const list=data.leaderboard.slice(0,10);if(!list.length){el.textContent='No scores yet — play a run!';return;}list.forEach((x,i)=>{const row=document.createElement('div');row.className='row';const left=document.createElement('div');left.innerHTML='<span class="leader-num">'+(i+1)+'</span>';const name=document.createElement('span');name.textContent=x.name||'Player';if(name.textContent===data.name)name.className='you';left.append(name);const score=document.createElement('div');score.className='reward';score.textContent=(x.score||0)+' pts';row.append(left,score);el.append(row);});}
+$('editName').addEventListener('click',()=>{const n=prompt('Choose your player name (max 18 characters):',data.name);if(n&&n.trim()){data.name=n.trim().slice(0,18);syncLeaderboard();save();updateUI();toast('Player name updated.');}});
+function shareInvite(){const url=location.href.split('#')[0];const text='Join me in DIP FROG Jungle Quest! My invite code: '+data.refCode+(url&&url.startsWith('http')?'\nPlay: '+url:'');if(navigator.share){navigator.share({title:'DIP FROG Jungle Quest',text,url:url.startsWith('http')?url:undefined}).catch(()=>{});}else if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(()=>toast('Invite copied!')).catch(()=>{prompt('Copy your invite text:',text);});}else{prompt('Copy your invite text:',text);} }
+$('copyRef').addEventListener('click',()=>{const text=data.refCode;if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(text).then(()=>toast('Referral code copied!')).catch(()=>prompt('Copy code:',text));else prompt('Copy code:',text);});
+$('shareRef').addEventListener('click',shareInvite);
+$('soundToggle').addEventListener('click',()=>{data.sound=!data.sound;save();updateUI();if(data.sound)sound('click');});
+document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b===btn));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===btn.dataset.tab));sound('click');}));
+
+// Platform-jumper game adapted from the uploaded DIP FROG HTML.
+const canvas=$('game'),ctx=canvas.getContext('2d'),overlay=$('gameOverlay');
+let W=320,H=480,scale=1,running=false,frame=0,runCoins=0,runScore=0,lives=3,player,platforms=[],treasures=[],bugs=[],keys={left:false,right:false},raf=0,last=0,hasPlayed=false;
+function resize(){const r=canvas.getBoundingClientRect();scale=Math.min(2,window.devicePixelRatio||1);W=Math.max(280,r.width);H=Math.max(300,r.height);canvas.width=Math.floor(W*scale);canvas.height=Math.floor(H*scale);ctx.setTransform(scale,0,0,scale,0,0);if(!running)draw();}
+window.addEventListener('resize',resize);
+function reset(){frame=0;runCoins=0;runScore=0;lives=3;player={x:W*.18,y:H*.55,vx:0,vy:0,w:30,h:34,ground:false,inv:0};platforms=[];treasures=[];bugs=[];let y=H*.78;platforms.push({x:0,y,w:W*.6,h:24});for(let i=0;i<12;i++){let x=i===0?W*.4:W*.2+Math.random()*W*.65;y-=55+Math.random()*30;platforms.push({x,y,w:65+Math.random()*55,h:16});if(Math.random()<.85)treasures.push({x:x+20+Math.random()*25,y:y-23,r:9,taken:false});if(i>2&&Math.random()<.38)bugs.push({x:x+10,y:y-25,base:x+10,alive:true});}}
+function addPlatform(){let top=Math.min(...platforms.map(p=>p.y)),y=top-(55+Math.random()*30),x=10+Math.random()*(W-105);platforms.push({x,y,w:65+Math.random()*65,h:16});if(Math.random()<.9)treasures.push({x:x+15+Math.random()*35,y:y-23,r:9,taken:false});if(Math.random()<.35)bugs.push({x:x+12,y:y-24,base:x+12,alive:true});}
+function background(){let g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#0587d1');g.addColorStop(.65,'#56d9ef');g.addColorStop(1,'#087f8c');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);ctx.fillStyle='#d5fbff';for(let i=0;i<4;i++){let x=((i*137-frame*.15)%(W+120)+W+120)%(W+120)-60;ctx.beginPath();ctx.ellipse(x,55+i%2*35,35,12,0,0,Math.PI*2);ctx.ellipse(x+23,52+i%2*35,24,16,0,0,Math.PI*2);ctx.fill();}ctx.fillStyle='#25b66b';ctx.beginPath();ctx.moveTo(0,H*.55);for(let x=0;x<=W;x+=25)ctx.lineTo(x,H*.48+Math.sin(x*.025+frame*.004)*22);ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.fill();for(let i=0;i<7;i++){let x=((i*103-frame*.25)%(W+100)+W+100)%(W+100)-40;ctx.fillStyle='#75472b';ctx.fillRect(x,H*.48,12,H*.3);ctx.fillStyle=i%2?'#0b9a54':'#13ad5c';ctx.beginPath();ctx.arc(x+6,H*.47,25,0,Math.PI*2);ctx.fill();}}
+function drawPlatform(p){ctx.fillStyle='#6b3c20';ctx.fillRect(p.x,p.y,p.w,p.h);ctx.fillStyle='#74e72a';ctx.fillRect(p.x,p.y,p.w,7);ctx.fillStyle='#b6ff59';for(let x=p.x+7;x<p.x+p.w;x+=16)ctx.fillRect(x,p.y+1,5,3);}
+function drawCoin(c){if(c.taken)return;let y=c.y+Math.sin(frame*.09+c.x)*3;ctx.fillStyle='#ff9e00';ctx.beginPath();ctx.arc(c.x,y,c.r+2,0,Math.PI*2);ctx.fill();ctx.fillStyle='#ffdf35';ctx.beginPath();ctx.arc(c.x,y,c.r,0,Math.PI*2);ctx.fill();ctx.fillStyle='#a96900';ctx.font='bold 12px sans-serif';ctx.textAlign='center';ctx.fillText('$',c.x,y+4);}
+function drawBug(b){if(b.alive){ctx.font='25px sans-serif';ctx.textAlign='center';ctx.fillText('🪲',b.x,b.y+5);}}
+function drawPlayer(){if(!player)return;let p=player;ctx.save();ctx.translate(p.x+p.w/2,p.y+p.h/2);if(p.vx<0)ctx.scale(-1,1);ctx.fillStyle='#319b18';ctx.beginPath();ctx.ellipse(-7,13,8,5,-.3,0,Math.PI*2);ctx.ellipse(9,13,8,5,.3,0,Math.PI*2);ctx.fill();ctx.fillStyle='#4bd51d';ctx.beginPath();ctx.ellipse(0,5,13,15,0,0,Math.PI*2);ctx.arc(0,-7,15,0,Math.PI*2);ctx.fill();ctx.fillStyle='#f8ffff';ctx.beginPath();ctx.arc(-7,-13,6,0,Math.PI*2);ctx.arc(7,-13,6,0,Math.PI*2);ctx.fill();ctx.fillStyle='#071b2b';ctx.beginPath();ctx.arc(-6,-12,3,0,Math.PI*2);ctx.arc(8,-12,3,0,Math.PI*2);ctx.fill();ctx.fillStyle='#101820';ctx.fillRect(-14,-16,28,8);ctx.fillStyle='#32cfff';ctx.fillRect(-11,-15,8,5);ctx.fillRect(3,-15,8,5);ctx.fillStyle='#ffc928';ctx.beginPath();ctx.moveTo(-10,-22);ctx.lineTo(-9,-32);ctx.lineTo(-3,-26);ctx.lineTo(1,-35);ctx.lineTo(5,-26);ctx.lineTo(11,-31);ctx.lineTo(10,-22);ctx.closePath();ctx.fill();ctx.restore();}
+function draw(){ctx.setTransform(scale,0,0,scale,0,0);background();platforms.forEach(drawPlatform);treasures.forEach(drawCoin);bugs.forEach(drawBug);drawPlayer();}
+function jump(){if(running&&player.ground){player.vy=-H*.021;player.ground=false;sound('jump');}}
+function hurt(){if(player.inv>0)return;lives--;player.inv=85;player.vy=-7;sound('hurt');if(lives<=0)gameOver();}
+function update(){frame++;let p=player;const gravity=.42*(H/480);if(keys.left)p.vx-=.55;if(keys.right)p.vx+=.55;p.vx*=.84;p.vx=Math.max(-4.3,Math.min(4.3,p.vx));p.vy+=gravity;p.x+=p.vx;p.y+=p.vy;p.ground=false;for(const plat of platforms){if(p.vy>=0&&p.x+p.w>plat.x&&p.x<plat.x+plat.w&&p.y+p.h>=plat.y&&p.y+p.h-p.vy<=plat.y){p.y=plat.y-p.h;p.vy=0;p.ground=true;}}if(p.y<H*.36){let dy=H*.36-p.y;p.y+=dy;platforms.forEach(q=>q.y+=dy);treasures.forEach(c=>c.y+=dy);bugs.forEach(b=>b.y+=dy);runScore+=Math.floor(dy);}platforms=platforms.filter(q=>q.y<H+50);treasures=treasures.filter(c=>c.y<H+30&&!c.taken);bugs=bugs.filter(b=>b.y<H+40);while(platforms.length<11)addPlatform();treasures.forEach(c=>{if(!c.taken&&Math.hypot(p.x+p.w/2-c.x,p.y+p.h/2-c.y)<25){c.taken=true;runCoins++;runScore+=25;sound('coin');}});bugs.forEach(b=>{if(b.alive){b.x+=Math.sin(frame*.045+b.base)*.8;if(p.inv<=0&&p.x+p.w-5>b.x-10&&p.x+5<b.x+13&&p.y+p.h-4>b.y-16&&p.y+5<b.y+9){b.alive=false;hurt();}}});if(p.y>H+20){hurt();p.y=H*.45;p.vy=-5;}if(p.inv>0)p.inv--;data.score=runScore;$('headerScore').textContent=runScore;}
+function loop(t){if(!running)return;last=t;update();draw();raf=requestAnimationFrame(loop);}
+function gameOver(){running=false;cancelAnimationFrame(raf);hasPlayed=true;data.coins+=runCoins;data.score=runScore;data.best=Math.max(data.best,runScore);if(!data.missions.play)data.missions.play=false;if(runCoins>=10&&!data.missions.coins)data.missions.coins=false;save();updateUI();overlay.style.display='flex';$('modalEmoji').textContent='🐸🏆';$('modalTitle').textContent='RUN COMPLETE';$('modalText').textContent='You collected '+runCoins+' coins and scored '+runScore+' points. Your best score is '+data.best+'.';$('startBtn').textContent='↻ PLAY AGAIN';$('howBtn').style.display='inline-block';sound('claim');}
+function start(){reset();running=true;overlay.style.display='none';last=performance.now();cancelAnimationFrame(raf);raf=requestAnimationFrame(loop);}
+function help(){ $('modalEmoji').textContent='🎮🐸';$('modalTitle').textContent='HOW TO PLAY';$('modalText').textContent='Use ◀ ▶ to move. Tap JUMP while standing on a platform. Collect gold coins, avoid bugs and do not fall!';$('startBtn').textContent='▶ LET’S PLAY';}
+function bindHold(id,key){const el=$(id),on=e=>{e.preventDefault();keys[key]=true;},off=e=>{e.preventDefault();keys[key]=false;};el.addEventListener('pointerdown',on);['pointerup','pointercancel','pointerleave'].forEach(ev=>el.addEventListener(ev,off));}
+bindHold('left','left');bindHold('right','right');$('jump').addEventListener('pointerdown',e=>{e.preventDefault();jump();});window.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='a')keys.left=true;if(e.key==='ArrowRight'||e.key==='d')keys.right=true;if(e.key==='ArrowUp'||e.key===' '||e.key==='w')jump();});window.addEventListener('keyup',e=>{if(e.key==='ArrowLeft'||e.key==='a')keys.left=false;if(e.key==='ArrowRight'||e.key==='d')keys.right=false;});$('startBtn').addEventListener('click',start);$('howBtn').addEventListener('click',help);
+resize();reset();draw();updateUI();
+// Telegram Web Apps SDK is optional; the game remains playable in a regular browser.
+if(window.Telegram&&window.Telegram.WebApp){try{window.Telegram.WebApp.ready();window.Telegram.WebApp.expand();}catch(e){}}
+})();
+</script>
+</body>
+</html>
